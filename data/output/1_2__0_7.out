@@ -1,0 +1,16 @@
+..\data\input\1_2__0_7.dat
+-- TINY GP (Java version) --
+SEED=-1
+MAX_LEN=10000
+POPSIZE=100000
+DEPTH=5
+CROSSOVER_PROB=0.9
+PMUT_PER_NODE=0.05
+MIN_RANDOM=-5.0
+MAX_RANDOM=17.0
+GENERATIONS=40
+TSIZE=2
+----------------------------------
+Generation=0 Avg Fitness=23742.06479269199 Best Fitness=0.0 Avg Size=10.992
+Best Individual: (-3.81905327490896 / (X1  + -3.81905327490896))
+PROBLEM SOLVED
