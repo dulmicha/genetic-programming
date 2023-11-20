@@ -5,8 +5,12 @@
  *
  */
 
-import java.util.*;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Random;
+import java.util.StringTokenizer;
+import java.lang.Math;
 
 public class TinyGP {
     double [] fitness;
@@ -17,8 +21,10 @@ public class TinyGP {
             SUB = 111,
             MUL = 112,
             DIV = 113,
+            SIN = 114,
+            COS = 115,
             FSET_START = ADD,
-            FSET_END = DIV;
+            FSET_END = COS;
     static double [] x = new double[FSET_START];
     static double minrandom, maxrandom;
     static char [] program;
@@ -43,18 +49,20 @@ public class TinyGP {
         if ( primitive < FSET_START )
             return(x[primitive]);
         switch ( primitive ) {
-            case ADD : return( run() + run() );
-            case SUB : return( run() - run() );
-            case MUL : return( run() * run() );
+            case SIN : return Math.sin(run());
+            case COS : return Math.cos(run());
+            case ADD : return run() + run();
+            case SUB : return run() - run() ;
+            case MUL : return run() * run() ;
             case DIV : {
                 double num = run(), den = run();
                 if ( Math.abs( den ) <= 0.001 )
-                    return( num );
+                    return num;
                 else
-                    return( num / den );
+                    return num / den;
             }
         }
-        return( 0.0 ); // should never get here
+        return 0.0; // should never get here
     }
 
     int traverse( char [] buffer, int buffercount ) {
@@ -62,6 +70,8 @@ public class TinyGP {
             return( ++buffercount );
 
         switch(buffer[buffercount]) {
+            case SIN:
+            case COS:
             case ADD:
             case SUB:
             case MUL:
@@ -144,6 +154,8 @@ public class TinyGP {
         else  {
             prim = (char) (rd.nextInt(FSET_END - FSET_START + 1) + FSET_START);
             switch(prim) {
+                case SIN:
+                case COS:
                 case ADD:
                 case SUB:
                 case MUL:
@@ -159,7 +171,7 @@ public class TinyGP {
     }
 
     int printIndiv(char []buffer, int buffercounter ) {
-        int a1=0, a2;
+        int a1=0, a2=0;
         if ( buffer[buffercounter] < FSET_START ) {
             if ( buffer[buffercounter] < varnumber )
                 System.out.print( "X"+ (buffer[buffercounter] + 1 )+ " ");
@@ -168,25 +180,41 @@ public class TinyGP {
             return( ++buffercounter );
         }
         switch(buffer[buffercounter]) {
+            case SIN: System.out.print( "SIN(");
+                a1= printIndiv( buffer, ++buffercounter );
+                a2 =a1;
+                System.out.print( ")");
+                break;
+            case COS: System.out.print( "COS(");
+                a1= printIndiv( buffer, ++buffercounter );
+                a2 =a1;
+                System.out.print( ")");
+                break;
             case ADD: System.out.print( "(");
                 a1= printIndiv( buffer, ++buffercounter );
                 System.out.print( " + ");
+                a2= printIndiv( buffer, a1 );
+                System.out.print( ")");
                 break;
             case SUB: System.out.print( "(");
                 a1= printIndiv( buffer, ++buffercounter );
                 System.out.print( " - ");
+                a2= printIndiv( buffer, a1 );
+                System.out.print( ")");
                 break;
             case MUL: System.out.print( "(");
                 a1= printIndiv( buffer, ++buffercounter );
                 System.out.print( " * ");
+                a2= printIndiv( buffer, a1 );
+                System.out.print( ")");
                 break;
             case DIV: System.out.print( "(");
                 a1= printIndiv( buffer, ++buffercounter );
                 System.out.print( " / ");
+                a2= printIndiv( buffer, a1 );
+                System.out.print( ")");
                 break;
         }
-        a2= printIndiv( buffer, a1 );
-        System.out.print( ")");
         return( a2);
     }
 
@@ -311,6 +339,8 @@ public class TinyGP {
                     parentcopy[mutsite] = (char) rd.nextInt(varnumber+randomnumber);
                 else
                     switch(parentcopy[mutsite]) {
+                        case SIN:
+                        case COS:
                         case ADD:
                         case SUB:
                         case MUL:
@@ -381,16 +411,9 @@ public class TinyGP {
     }
 
     public static void main(String[] args) {
-        String fname = "zad1_2.dat";
+        String fname = args[0];
         long s = -1;
 
-//        if ( args.length == 2 ) {
-//            s = Integer.valueOf(args[0]).intValue();
-//            fname = args[1];
-//        }
-//        if ( args.length == 1 ) {
-            fname = args[0];
-//        }
         System.out.println(fname);
         TinyGP gp = new TinyGP(fname, s);
         gp.evolve();
