@@ -16,6 +16,7 @@ public class TinyGP {
     double[] fitness;
     char[][] pop;
     static Random rd = new Random();
+    static double problemSolvedThreshold;
     static final int
             ADD = 110,
             SUB = 111,
@@ -35,7 +36,7 @@ public class TinyGP {
     static double avg_len;
     static final int
             MAX_LEN = 10000,
-            POPSIZE = 100000,
+            POPSIZE = 75000,
             DEPTH = 5,
             GENERATIONS = 40,
             TSIZE = 2;
@@ -365,12 +366,14 @@ public class TinyGP {
                 "\nMAX_RANDOM=" + maxrandom +
                 "\nGENERATIONS=" + GENERATIONS +
                 "\nTSIZE=" + TSIZE +
+                "\nSOLVING_THRESHOLD=" + problemSolvedThreshold +
                 "\n----------------------------------\n");
     }
 
-    public TinyGP(String fname, long s) {
+    public TinyGP(String fname, long s, double t) {
         fitness = new double[POPSIZE];
         seed = s;
+        problemSolvedThreshold = t;
         if (seed >= 0)
             rd.setSeed(seed);
         setupFitness(fname);
@@ -386,7 +389,7 @@ public class TinyGP {
         printParms();
         stats(fitness, pop, 0);
         for (gen = 1; gen < GENERATIONS; gen++) {
-            if (fbestpop > -1e-5) {
+            if (fbestpop > -problemSolvedThreshold) {
                 System.out.print("PROBLEM SOLVED\n");
                 System.exit(0);
             }
@@ -413,9 +416,12 @@ public class TinyGP {
     public static void main(String[] args) {
         String fname = args[0];
         long s = -1;
+        double t = 1e-5;
+        if (args.length == 2)
+            t = Double.parseDouble(args[1]);
 
         System.out.println(fname);
-        TinyGP gp = new TinyGP(fname, s);
+        TinyGP gp = new TinyGP(fname, s, t);
         gp.evolve();
     }
 };
