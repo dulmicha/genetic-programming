@@ -1,0 +1,2 @@
+,best_individual,best_individual_simplified,best_individual_without,best_individual_without_simplified
+0,(((Y+Y)/cos(cos(1.5755561501928819)))+X)  ,X + 2.0000226559615535*Y,(X+(Y+Y))  ,X + 2*Y

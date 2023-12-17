@@ -36,7 +36,7 @@ public class TinyGP {
     static double avg_len;
     static final int
             MAX_LEN = 10000,
-            POPSIZE = 75000,
+            POPSIZE = 50000,
             DEPTH = 5,
             GENERATIONS = 40,
             TSIZE = 2;
@@ -75,13 +75,14 @@ public class TinyGP {
             return ++buffercount;
 
         switch (buffer[buffercount]) {
-            case SIN:
-            case COS:
             case ADD:
             case SUB:
             case MUL:
             case DIV:
                 return traverse(buffer, traverse(buffer, ++buffercount));
+            case SIN:
+            case COS:
+                return traverse(buffer, ++buffercount);
         }
         return 0; // should never get here
     }
@@ -156,8 +157,6 @@ public class TinyGP {
         } else {
             prim = (char) (rd.nextInt(FSET_END - FSET_START + 1) + FSET_START);
             switch (prim) {
-                case SIN:
-                case COS:
                 case ADD:
                 case SUB:
                 case MUL:
@@ -167,6 +166,10 @@ public class TinyGP {
                     if (one_child < 0)
                         return -1;
                     return grow(buffer, one_child, max, depth - 1);
+                case SIN:
+                case COS:
+                    buffer[pos] = prim;
+                    return grow(buffer, pos+1, max, depth - 1);
             }
         }
         return 0; // should never get here
@@ -341,15 +344,18 @@ public class TinyGP {
                     parentcopy[mutsite] = (char) rd.nextInt(varnumber + randomnumber);
                 else
                     switch (parentcopy[mutsite]) {
-                        case SIN:
-                        case COS:
                         case ADD:
                         case SUB:
                         case MUL:
                         case DIV:
                             parentcopy[mutsite] =
-                                    (char) (rd.nextInt(FSET_END - FSET_START + 1)
+                                    (char) (rd.nextInt(DIV - FSET_START + 1)
                                             + FSET_START);
+                        case SIN:
+                        case COS:
+                            parentcopy[mutsite] =
+                                    (char) (rd.nextInt(FSET_END - DIV)
+                                            + DIV + 1);
                     }
             }
         }
