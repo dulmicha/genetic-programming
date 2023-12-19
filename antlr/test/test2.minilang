@@ -1,0 +1,2 @@
+X_3 = input();
+print(X_3);
