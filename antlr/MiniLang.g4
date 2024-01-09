@@ -8,31 +8,27 @@ instruction      : loop
                  | assignment
                  | print;
 
-if               : 'if' '(' condition (logical_operation condition)* ')' block_statement;
+if               : 'if' '(' condition ')' block_statement;
 
-condition        : expression comparison_operator (expression | boolean);
+condition        : condition_body (logical_operation = ('and' | 'or') condition_body)*;
+
+condition_body    : expression comparison_operator = ('>' | '<' | '==' | '!=' | '<=' | '>=') (expression | boolean);
 
 input            : 'input()';
 
 assignment       : var '=' (expression | input) ';';
 
-expression       : var
-                 | integer
-                 | math_expression;
+expression       : variable_name = var
+                 | number = integer
+                 | math_ex = math_expression;
 
-math_expression  : '(' expression arithmetic_operator expression ')';
+math_expression  : '(' expression arithmetic_operator = ('+' | '-' | '/' | '*') expression ')';
 
 block_statement  : '{' instruction* '}';
 
 loop             : 'for' nonzero_digit block_statement;
 
 print            : 'print' '(' expression ')' ';';
-
-comparison_operator : '>' | '<' | '==' | '!=' | '<=' | '>=';
-
-arithmetic_operator : '+' | '-' | '*' | '/';
-
-logical_operation : 'and' | 'or';
 
 var               : VAR_NAME;
 
