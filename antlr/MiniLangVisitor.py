@@ -1,5 +1,6 @@
 # Generated from C:/Users/wehil/PycharmProjects/genetic-programming/antlr/MiniLang.g4 by ANTLR 4.13.1
 from antlr4 import *
+import random
 
 if "." in __name__:
     from .MiniLangParser import MiniLangParser
@@ -13,7 +14,7 @@ class MiniLangVisitor(ParseTreeVisitor):
 
     def __init__(self, input_values=None, instruction_limit=100, output_limit=10):
         if input_values is None:
-            input_values = []
+            input_values = ['X_0', 5, 6]
         self.variables = {}
         self.output = []
         self.output_limit = output_limit
@@ -28,13 +29,13 @@ class MiniLangVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MiniLangParser#instruction.
     def visitInstruction(self, ctx: MiniLangParser.InstructionContext):
+        self.instruction_counter += 1
+        if self.instruction_counter >= self.instruction_limit:
+            raise Exception("Przekroczono limit instrukcji")
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by MiniLangParser#if.
     def visitIf(self, ctx: MiniLangParser.IfContext):
-        self.instruction_counter += 1
-        if self.instruction_counter >= self.instruction_limit:
-            raise Exception("Przekroczono limit instrukcji")
         condition = self.visitCondition(ctx.getChild(2))
         if condition:
             self.visitBlock_statement(ctx.getChild(4))
@@ -69,17 +70,26 @@ class MiniLangVisitor(ParseTreeVisitor):
         return operation[operator](left_value, right_value)
 
     # Visit a parse tree produced by MiniLangParser#input.
-    def visitInput(self, ctx: MiniLangParser.InputContext):  # TODO
-        return self.visitChildren(ctx)
+    def visitInput(self, ctx: MiniLangParser.InputContext):
+        if self.input_index >= len(self.input_values):
+            raise Exception("Brak danych wejściowych")
+        value = self.input_values[self.input_index]
+        self.input_index += 1
+        if isinstance(value, str):
+            if value not in self.variables:
+                self.variables[value] = random.randint(1, 100)
+            return self.variables[value]
+        elif isinstance(value, int):
+            return value
 
     def visitAssignment(self, ctx: MiniLangParser.AssignmentContext):
-        self.instruction_counter += 1
-        if self.instruction_counter >= self.instruction_limit:
-            raise Exception("Przekroczono limit instrukcji")
         variable_name = ctx.getChild(0).getText()
         if not self.variables.get(str(variable_name)):
             self.variables[variable_name] = 0
-        variable_value = self.visitExpression(ctx.getChild(2))
+        if ctx.expression():
+            variable_value = self.visitExpression(ctx.getChild(2))
+        else:
+            variable_value = self.visitInput(ctx.getChild(2))
         self.variables[variable_name] = variable_value
 
     # Visit a parse tree produced by MiniLangParser#expression.
@@ -122,16 +132,10 @@ class MiniLangVisitor(ParseTreeVisitor):
     def visitLoop(self, ctx: MiniLangParser.LoopContext):
         iterations = int(ctx.getChild(1).getText())
         for _ in range(iterations):
-            self.instruction_counter += 1
-            if self.instruction_counter >= self.instruction_limit:
-                raise Exception("Przekroczono limit instrukcji")
             self.visitBlock_statement(ctx.getChild(2))
 
     # Visit a parse tree produced by MiniLangParser#print.
     def visitPrint(self, ctx: MiniLangParser.PrintContext):
-        self.instruction_counter += 1
-        if self.instruction_counter >= self.instruction_limit:
-            raise Exception("Przekroczono limit instrukcji")
         if len(self.output) >= self.output_limit:
             raise Exception("Przekroczono limit wyjścia")
         self.output.append(self.visitExpression(ctx.getChild(2)))

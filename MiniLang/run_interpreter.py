@@ -5,7 +5,7 @@ from antlr4 import *
 
 
 def interpreter():
-    lexer = MiniLangLexer(InputStream("X_1 = 0;for 5 {X_1 = (X_1 + 1);if (X_1 > 3 and X_1 < 5) {print(X_1);}}"))
+    lexer = MiniLangLexer(InputStream("X_0 = 3; X_1 = input();"))
     stream = CommonTokenStream(lexer)
     parser = MiniLangParser(stream)
     tree = parser.program()
