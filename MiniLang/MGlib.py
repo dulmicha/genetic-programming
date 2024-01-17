@@ -1,4 +1,4 @@
-from generate_programs import Program, GenerationMethod
+from generate import Program, GenerationMethod
 from parameters import Params
 from antlr.MiniLangVisitor import MiniLangVisitor
 from antlr.MiniLangParser import MiniLangParser

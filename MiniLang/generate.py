@@ -2,6 +2,8 @@ import random
 from enum import Enum, auto
 from dataclasses import dataclass, field
 
+from MiniLang.errors import InvalidGenerationError
+
 # INDENT = "\t"
 INDENT = "  "
 
@@ -14,7 +16,6 @@ class NodeType(Enum):
     CONDITION = auto()
     CONDITION_BODY = auto()
     INPUT = auto()
-    EXPRESSION = auto()
     MATH_EXPRESSION = auto()
     BLOCK_STATEMENT = auto()
     VAR = auto()
@@ -66,21 +67,25 @@ class Node:
 
     def __post_init__(self):
         if self.parent:
-            self.variables = self.parent.variables
+            self.variables = self.parent.variables.copy()
             self.level = (
                 self.parent.level + 1
                 if not self.n_type == NodeType.BLOCK_STATEMENT
                 else self.parent.level
             )
 
-    def get_random_variable(self):
-        if random.random() < 0.5 and self.variables:
+    def get_or_generate_variable(self, generation_probability=0.5):
+        if random.random() > generation_probability and self.variables:
             return random.choice(self.variables)
         return self._generate_variable_name()
 
     def _generate_variable_name(self):
         variable_name = f"X_{len(self.variables)}"
-        self.variables.append(variable_name)
+        p = self
+        while p.n_type != NodeType.BLOCK_STATEMENT:
+            p.variables.append(variable_name)
+            p = p.parent
+        p.variables.append(variable_name)
         return variable_name
 
     def __str__(self) -> str:
@@ -99,8 +104,6 @@ class Node:
                 return f'{self.children[0]} {self.attributes["operator"]} {self.children[1]}'
             case NodeType.INPUT:
                 return f"input()"
-            case NodeType.EXPRESSION:
-                return f"{self.children[0]}"
             case NodeType.MATH_EXPRESSION:
                 return f'({self.children[0]} {self.attributes["operator"]} {self.children[1]})'
             case NodeType.BLOCK_STATEMENT:
@@ -121,6 +124,7 @@ class Node:
 class GenerationMethod(Enum):
     FULL = 0
     GROW = 1
+    HALF_HALF = 2
 
 
 @dataclass
@@ -129,9 +133,15 @@ class Program:
     max_width: int = 1
     method: GenerationMethod = GenerationMethod.GROW
     max_iterations: int = 100
+    min_integer: int = 0
+    max_integer: int = 10
     root: Node = field(init=False)
 
     def __post_init__(self):
+        if self.method == GenerationMethod.HALF_HALF:
+            raise InvalidGenerationError(
+                "Generation method HALF_HALF is used for population generation."
+            )
         self.root = self._generate_program()
 
     def _generate_program(self):
@@ -139,7 +149,6 @@ class Program:
         if self.max_depth == 0:
             return root
         for _ in range(random.randint(1, self.max_width)):
-            # for _ in range(self.max_depth):
             root.children.append(self._generate_instruction(root))
         return root
 
@@ -151,7 +160,6 @@ class Program:
     def _generate_block_statement(self, parent):
         node = Node(NodeType.BLOCK_STATEMENT, parent=parent, level=parent.level + 1)
         for _ in range(random.randint(1, self.max_width)):
-            # for _ in range(self.max_width):
             node.children.append(self._generate_instruction(node))
         return node
 
@@ -186,7 +194,9 @@ class Program:
 
     def _generate_print(self, parent):
         node = Node(NodeType.PRINT, parent=parent, level=parent.level)
-        node.children.append(self._generate_expression(node))
+        node.children.append(
+            self._generate_expression(node, var_generation_probability=0)
+        )
         return node
 
     def _generate_if(self, parent):
@@ -204,8 +214,12 @@ class Program:
             parent=parent,
             attributes={"operator": random.choice(list(ComparisonOperator))},
         )
-        node.children.append(self._generate_expression(node))
-        node.children.append(self._generate_expression(node))  # excluding boolean
+        node.children.append(
+            self._generate_expression(node, var_generation_probability=0)
+        )
+        node.children.append(
+            self._generate_expression(node, var_generation_probability=0)
+        )  # excluding boolean
         return node
 
     def _generate_condition(self, parent):
@@ -215,9 +229,11 @@ class Program:
         )  # excluding longer conditions
         return node
 
-    def _generate_variable(self, parent):
+    def _generate_variable(self, parent, generation_probability=0.5):
         node = Node(NodeType.VAR, parent=parent)
-        node.value = node.get_random_variable()
+        node.value = node.get_or_generate_variable(
+            generation_probability=generation_probability
+        )
         return node
 
     def _generate_assignment(self, parent):
@@ -226,7 +242,10 @@ class Program:
         if random.random() < 0.5:
             node.children.append(self._generate_input(node))
         else:
-            node.children.append(self._generate_expression(node))
+            var = node.children[0]
+            while var.value == node.children[0].value:
+                var = self._generate_expression(node, var_generation_probability=0)
+            node.children.append(var)
         return node
 
     def _generate_input(self, parent):
@@ -236,14 +255,15 @@ class Program:
     def _count_nested_expressions(self, node):
         nested_expressions = 0
         while node.parent:
-            if node.n_type in [NodeType.EXPRESSION, NodeType.MATH_EXPRESSION]:
+            if node.n_type == NodeType.MATH_EXPRESSION:
                 nested_expressions += 1
             node = node.parent
         return nested_expressions
 
-    def _generate_expression(self, parent):
-        node = Node(NodeType.EXPRESSION, parent=parent)
-        expr_types = [NodeType.VAR, NodeType.INTEGER]
+    def _generate_expression(self, parent, var_generation_probability=0.5):
+        expr_types = [NodeType.INTEGER]
+        if parent.variables:
+            expr_types.append(NodeType.VAR)
         if (
             self._count_nested_expressions(parent) < self.max_width
             and parent.level < self.max_depth
@@ -251,12 +271,13 @@ class Program:
             expr_types.append(NodeType.MATH_EXPRESSION)
         _expr_type = random.choice(expr_types)
         if _expr_type == NodeType.VAR:
-            node.children.append(self._generate_variable(node))
+            return self._generate_variable(
+                parent, generation_probability=var_generation_probability
+            )
         elif _expr_type == NodeType.INTEGER:
-            node.children.append(self._generate_integer(node))
+            return self._generate_integer(parent)
         elif _expr_type == NodeType.MATH_EXPRESSION:
-            node.children.append(self._generate_math_expression(node))
-        return node
+            return self._generate_math_expression(parent)
 
     def _generate_math_expression(self, parent):
         node = Node(
@@ -269,12 +290,17 @@ class Program:
         return node
 
     def _generate_integer(self, parent):
-        node = Node(NodeType.INTEGER, parent=parent, value=str(random.randint(0, 9)))
+        node = Node(
+            NodeType.INTEGER,
+            parent=parent,
+            value=str(random.randint(self.min_integer, self.max_integer)),
+        )
         return node
 
     def __str__(self):
         return str(self.root)
 
 
-# program = Program(1, 1, GenerationMethod.FULL)
-# print(program)
+if __name__ == "__main__":
+    program = Program(max_depth=3, max_width=3, method=GenerationMethod.FULL)
+    print(program)
