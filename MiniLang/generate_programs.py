@@ -276,5 +276,5 @@ class Program:
         return str(self.root)
 
 
-program = Program(3, 3, GenerationMethod.FULL)
-print(program)
+# program = Program(1, 1, GenerationMethod.FULL)
+# print(program)

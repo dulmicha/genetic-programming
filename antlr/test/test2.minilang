@@ -1,2 +1,7 @@
 X_3 = input();
+X_2 = input();
+X_1 = input();
+X_0 = 8;
+X_4 = X_4;
+print(X_0);
 print(X_3);

@@ -12,9 +12,7 @@ else:
 
 class MiniLangVisitor(ParseTreeVisitor):
 
-    def __init__(self, input_values=None, instruction_limit=100, output_limit=10):
-        if input_values is None:
-            input_values = ['X_0', 5, 6]
+    def __init__(self, input_values=None, instruction_limit=400, output_limit=1000):
         self.variables = {}
         self.output = []
         self.output_limit = output_limit
@@ -22,6 +20,18 @@ class MiniLangVisitor(ParseTreeVisitor):
         self.input_index = 0
         self.instruction_limit = instruction_limit
         self.instruction_counter = 0
+
+    def get_next_input(self):
+        if self.input_index >= len(self.input_values):
+            self.input_index = 0
+        value = self.input_values[self.input_index]
+        self.input_index += 1
+        if isinstance(value, str):
+            if value not in self.variables:
+                self.variables[value] = random.randint(1, 100)
+            return self.variables[value]
+        elif isinstance(value, int):
+            return value
 
     # Visit a parse tree produced by MiniLangParser#program.
     def visitProgram(self, ctx: MiniLangParser.ProgramContext):
@@ -72,7 +82,7 @@ class MiniLangVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by MiniLangParser#input.
     def visitInput(self, ctx: MiniLangParser.InputContext):
         if self.input_index >= len(self.input_values):
-            raise Exception("Brak danych wejściowych")
+            self.input_index = 0
         value = self.input_values[self.input_index]
         self.input_index += 1
         if isinstance(value, str):
@@ -84,8 +94,6 @@ class MiniLangVisitor(ParseTreeVisitor):
 
     def visitAssignment(self, ctx: MiniLangParser.AssignmentContext):
         variable_name = ctx.getChild(0).getText()
-        if not self.variables.get(str(variable_name)):
-            self.variables[variable_name] = 0
         if ctx.expression():
             variable_value = self.visitExpression(ctx.getChild(2))
         else:
@@ -96,13 +104,18 @@ class MiniLangVisitor(ParseTreeVisitor):
     def visitExpression(self, ctx: MiniLangParser.ExpressionContext):
         if ctx.integer():
             return self.visitInteger(ctx.getChild(0))
+        # elif ctx.var():
+        #     variable_name = ctx.getChild(0).getText()
+        #     if variable_name in self.variables:
+        #         variable_name = ctx.getText()
+        #         return self.variables.get(variable_name)
+        #     else:
+        #         raise Exception("Zmienna niezainicjalizowana")
         elif ctx.var():
             variable_name = ctx.getChild(0).getText()
-            if variable_name in self.variables:
-                variable_name = ctx.getText()
-                return self.variables.get(variable_name)
-            else:
-                raise Exception("Zmienna niezainicjalizowana")
+            if variable_name not in self.variables:
+                self.variables[variable_name] = self.get_next_input()
+            return self.variables[variable_name]
         elif ctx.math_expression():
             return self.visitMath_expression(ctx.getChild(0))
 
@@ -118,7 +131,7 @@ class MiniLangVisitor(ParseTreeVisitor):
             if right_value == 0:
                 raise Exception("Dzielenie przez zero")
             else:
-                return left_value / right_value
+                return left_value // right_value
         return operation[operator](left_value, right_value)
 
     # Visit a parse tree produced by MiniLangParser#block_statement.
@@ -142,7 +155,10 @@ class MiniLangVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MiniLangParser#var.
     def visitVar(self, ctx: MiniLangParser.VarContext):
-        return ctx.getText()
+        variable_name = ctx.getText()
+        if variable_name not in self.variables:
+            self.variables[variable_name] = self.get_next_input()
+        return self.variables[variable_name]
 
     # Visit a parse tree produced by MiniLangParser#nonzero_digit.
     def visitNonzero_digit(self, ctx: MiniLangParser.Nonzero_digitContext):
