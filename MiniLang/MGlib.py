@@ -1,21 +1,9 @@
 from generate import Program, GenerationMethod
 from interpreter import Interpreter
 from parameters import Params
+from fitness_functions import get_fitness_function
 from antlr4 import *
 import random
-
-
-def calculate_fitness_difference(
-    program_output, expected_output
-):  # fitness for number at random position in output
-    fit = 0
-    if len(program_output) == 0:
-        return -100000.0
-    elif 1 in program_output:
-        return 0.0
-    for i in range(len(expected_output)):
-        fit += -abs(program_output[i] - expected_output[i])
-    return fit
 
 
 class MGlib:
@@ -23,13 +11,14 @@ class MGlib:
     outputs: list
     parameters: Params
 
-    def __init__(self, inputs=None, outputs=None, parameters=None):
+    def __init__(self, inputs=None, outputs=None, parameters=None, example=None):
         self.inputs = inputs
         self.outputs = outputs
         self.parameters = parameters
         self.population_size = parameters.population_size
         self.method = GenerationMethod.FULL
         self.max_iterations = 10
+        self.example = example
         self.population = [
             self.create_individual() for _ in range(self.parameters.population_size)
         ]
@@ -42,6 +31,9 @@ class MGlib:
         self.best = None
         self.generation = 0
         self.avg_fitness = -1.0
+
+    def fitness_function(self, program_output, expected_output):
+        return get_fitness_function(self.example)(program_output, expected_output)
 
     def create_individual(self):
         if self.method == GenerationMethod.HALF_HALF:
@@ -62,10 +54,10 @@ class MGlib:
         fitness = 0
         for idx in range(len(self.inputs)):
             ind = str(individual)
-            program_output, program_input, program_variables = Interpreter.run(
+            program_output, *_ = Interpreter.run(
                 ind, self.inputs[idx], from_file=False
             )
-            fitness += calculate_fitness_difference(program_output, self.outputs[idx])
+            fitness += self.fitness_function(program_output, self.outputs[idx])
         return fitness
 
     def display_population_fitness(self):
@@ -110,7 +102,7 @@ class MGlib:
             for idx, individual in enumerate(self.population):
                 self.fitnesses[idx] = self.compute_fitness(individual)
             i = self.select_best()
-            print(f"Generacja {gen + 1}, najlepszy fitness: {self.best_fitness}")
+            print(f"Generation {gen + 1}, best fitness: {self.best_fitness}")
             if self.best_fitness == 0.0:
                 self.save_result_to_file(i, True, self.best_fitness)
                 print("Problem solved!\n")

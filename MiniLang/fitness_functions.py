@@ -63,3 +63,15 @@ def fitness_1_1_F(out, expected):
     else:
         fit = -1000000.0
     return fit
+
+fitness_functions = {
+    "1_1_A": fitness_1_1_A,
+    "1_1_B": fitness_1_1_B,
+    "1_1_C": fitness_1_1_C,
+    "1_1_D": fitness_1_1_D,
+    "1_1_E": fitness_1_1_E,
+    "1_1_F": fitness_1_1_F,
+}
+
+def get_fitness_function(fitness_function_name):
+    return fitness_functions[fitness_function_name]
