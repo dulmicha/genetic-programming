@@ -1,6 +1,6 @@
 # Generated from C:/Users/wehil/PycharmProjects/genetic-programming/antlr/MiniLang.g4 by ANTLR 4.13.1
 from antlr4 import *
-from errors import *
+from antlr.errors import *
 import random
 
 if "." in __name__:

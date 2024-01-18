@@ -63,7 +63,7 @@ class MGlib:
         for idx in range(len(self.inputs)):
             ind = str(individual)
             program_output, program_input, program_variables = Interpreter.run(
-                ind, self.inputs[idx], False
+                ind, self.inputs[idx], from_file=False
             )
             fitness += calculate_fitness_difference(program_output, self.outputs[idx])
         return fitness
@@ -137,7 +137,7 @@ class MGlib:
         individual_program = self.population[index]
         ind_str = str(individual_program)
         program_output, program_input, program_variables = Interpreter.run(
-            ind_str, self.inputs[index], False
+            ind_str, self.inputs[index], from_file=False
         )
         print("---------------------")
         print("Program: ")

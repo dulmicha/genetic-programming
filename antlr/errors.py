@@ -1,13 +1,13 @@
-class InstructionLimitExceededException(Exception):
+class InstructionLimitExceededException(BaseException):
     """Raised when instruction limit is exceeded."""
     pass
 
 
-class OutputLimitExceededException(Exception):
+class OutputLimitExceededException(BaseException):
     """Raised when output limit is exceeded."""
     pass
 
 
-class VariableNotInitializedException(Exception):
+class VariableNotInitializedException(BaseException):
     """Raised when variable is not initialized."""
     pass
