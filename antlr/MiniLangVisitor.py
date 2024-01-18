@@ -1,5 +1,6 @@
 # Generated from C:/Users/wehil/PycharmProjects/genetic-programming/antlr/MiniLang.g4 by ANTLR 4.13.1
 from antlr4 import *
+from errors import *
 import random
 
 if "." in __name__:
@@ -12,7 +13,7 @@ else:
 
 class MiniLangVisitor(ParseTreeVisitor):
 
-    def __init__(self, input_values=None, instruction_limit=400, output_limit=1000):
+    def __init__(self, input_values=None, instruction_limit=400, output_limit=1000, strict_mode=False):
         self.variables = {}
         self.output = []
         self.output_limit = output_limit
@@ -20,6 +21,7 @@ class MiniLangVisitor(ParseTreeVisitor):
         self.input_index = 0
         self.instruction_limit = instruction_limit
         self.instruction_counter = 0
+        self.strict_mode = strict_mode
 
     def get_next_input(self):
         if self.input_index >= len(self.input_values):
@@ -41,7 +43,7 @@ class MiniLangVisitor(ParseTreeVisitor):
     def visitInstruction(self, ctx: MiniLangParser.InstructionContext):
         self.instruction_counter += 1
         if self.instruction_counter >= self.instruction_limit:
-            raise Exception("Przekroczono limit instrukcji")
+            raise InstructionLimitExceededException("Przekroczono limit instrukcji")
         return self.visitChildren(ctx)
 
     # Visit a parse tree produced by MiniLangParser#if.
@@ -104,13 +106,13 @@ class MiniLangVisitor(ParseTreeVisitor):
     def visitExpression(self, ctx: MiniLangParser.ExpressionContext):
         if ctx.integer():
             return self.visitInteger(ctx.getChild(0))
-        # elif ctx.var():
-        #     variable_name = ctx.getChild(0).getText()
-        #     if variable_name in self.variables:
-        #         variable_name = ctx.getText()
-        #         return self.variables.get(variable_name)
-        #     else:
-        #         raise Exception("Zmienna niezainicjalizowana")
+        elif ctx.var() and self.strict_mode:
+            variable_name = ctx.getChild(0).getText()
+            if variable_name in self.variables:
+                variable_name = ctx.getText()
+                return self.variables.get(variable_name)
+            else:
+                raise VariableNotInitializedException("Zmienna niezainicjalizowana")
         elif ctx.var():
             variable_name = ctx.getChild(0).getText()
             if variable_name not in self.variables:
@@ -129,7 +131,7 @@ class MiniLangVisitor(ParseTreeVisitor):
                      '*': lambda x, y: x * y}
         if operator == '/':
             if right_value == 0:
-                raise Exception("Dzielenie przez zero")
+                raise ZeroDivisionError("Dzielenie przez 0")
             else:
                 return left_value // right_value
         return operation[operator](left_value, right_value)
@@ -138,7 +140,7 @@ class MiniLangVisitor(ParseTreeVisitor):
     def visitBlock_statement(self, ctx: MiniLangParser.Block_statementContext):
         for instruction in ctx.getChildren():
             if self.instruction_counter >= self.instruction_limit:
-                raise Exception("Przekroczono limit instrukcji")
+                raise InstructionLimitExceededException("Przekroczono limit instrukcji")
             self.visit(instruction)
 
     # Visit a parse tree produced by MiniLangParser#loop.
@@ -150,7 +152,7 @@ class MiniLangVisitor(ParseTreeVisitor):
     # Visit a parse tree produced by MiniLangParser#print.
     def visitPrint(self, ctx: MiniLangParser.PrintContext):
         if len(self.output) >= self.output_limit:
-            raise Exception("Przekroczono limit wyjścia")
+            raise OutputLimitExceededException("Przekroczono limit wyjścia")
         self.output.append(self.visitExpression(ctx.getChild(2)))
 
     # Visit a parse tree produced by MiniLangParser#var.
