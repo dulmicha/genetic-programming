@@ -1,5 +1,5 @@
 X_1 = 0;
-for 5 {
+while (X_1 >= 0) {
     X_1 = (X_1 + 1);
     if (X_1 > 3 and X_1 < 5 and X_1 < 10) {
         print(X_1);

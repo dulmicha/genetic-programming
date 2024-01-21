@@ -12,7 +12,7 @@ if               : 'if' '(' condition ')' block_statement;
 
 condition        : condition_body (logical_operation = ('and' | 'or') condition_body)*;
 
-condition_body    : expression comparison_operator = ('>' | '<' | '==' | '!=' | '<=' | '>=') (expression | boolean);
+condition_body   : expression comparison_operator = ('>' | '<' | '==' | '!=' | '<=' | '>=') (expression | boolean);
 
 input            : 'input()';
 
@@ -26,13 +26,11 @@ math_expression  : '(' expression arithmetic_operator = ('+' | '-' | '/' | '*') 
 
 block_statement  : '{' instruction* '}';
 
-loop             : 'for' nonzero_digit block_statement;
+loop             : 'while' '(' condition ')' block_statement;
 
 print            : 'print' '(' expression ')' ';';
 
 var               : VAR_NAME;
-
-nonzero_digit     : POSITIVE_INT;
 
 integer           : INT | POSITIVE_INT;
 

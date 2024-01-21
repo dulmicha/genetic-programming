@@ -125,15 +125,6 @@ class MiniLangListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MiniLangParser#nonzero_digit.
-    def enterNonzero_digit(self, ctx:MiniLangParser.Nonzero_digitContext):
-        pass
-
-    # Exit a parse tree produced by MiniLangParser#nonzero_digit.
-    def exitNonzero_digit(self, ctx:MiniLangParser.Nonzero_digitContext):
-        pass
-
-
     # Enter a parse tree produced by MiniLangParser#integer.
     def enterInteger(self, ctx:MiniLangParser.IntegerContext):
         pass

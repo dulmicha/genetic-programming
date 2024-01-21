@@ -13,7 +13,7 @@ else:
 
 class MiniLangVisitor(ParseTreeVisitor):
 
-    def __init__(self, input_values=None, instruction_limit=400, output_limit=1000, strict_mode=False):
+    def __init__(self, input_values=None, instruction_limit=10, output_limit=1000, strict_mode=False):
         self.variables = {}
         self.output = []
         self.output_limit = output_limit
@@ -145,9 +145,8 @@ class MiniLangVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MiniLangParser#loop.
     def visitLoop(self, ctx: MiniLangParser.LoopContext):
-        iterations = int(ctx.getChild(1).getText())
-        for _ in range(iterations):
-            self.visitBlock_statement(ctx.getChild(2))
+        while self.visitCondition(ctx.getChild(2)):
+            self.visitBlock_statement(ctx.getChild(4))
 
     # Visit a parse tree produced by MiniLangParser#print.
     def visitPrint(self, ctx: MiniLangParser.PrintContext):
@@ -161,10 +160,6 @@ class MiniLangVisitor(ParseTreeVisitor):
         if variable_name not in self.variables:
             self.variables[variable_name] = self.get_next_input()
         return self.variables[variable_name]
-
-    # Visit a parse tree produced by MiniLangParser#nonzero_digit.
-    def visitNonzero_digit(self, ctx: MiniLangParser.Nonzero_digitContext):
-        return int(ctx.getText())
 
     # Visit a parse tree produced by MiniLangParser#integer.
     def visitInteger(self, ctx: MiniLangParser.IntegerContext):
