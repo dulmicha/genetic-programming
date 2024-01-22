@@ -1,7 +1,7 @@
 import random
 import pickle
 from enum import Enum, auto
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 
 from MiniLang.errors import InvalidGenerationError
 
@@ -75,6 +75,29 @@ class Node:
                 else self.parent.level
             )
 
+    def __eq__(self, __value: object) -> bool:
+        if isinstance(__value, Node):
+            return (
+                self.n_type == __value.n_type
+                and self.value == __value.value
+                and self.children == __value.children
+            )
+        print("Not a node")
+        return self.value == __value
+
+    def copy(self):
+        return replace(self, children=[child.copy() for child in self.children])
+
+    def replace_child(self, curr_child, new_child):
+        if not self.children:
+            return
+        for idx, child in enumerate(self.children):
+            if child == curr_child:
+                self.children.pop(idx)
+                self.children.insert(idx, new_child)
+                return
+            child.replace_child(curr_child, new_child)
+
     def get_or_generate_variable(self, generation_probability=0.5):
         if random.random() > generation_probability and self.variables:
             return random.choice(self.variables)
@@ -89,12 +112,21 @@ class Node:
         p.variables.append(variable_name)
         return variable_name
 
+    def get_compatible_types(self):
+        match self.n_type:
+            case NodeType.LOOP | NodeType.IF | NodeType.ASSIGNMENT | NodeType.PRINT:
+                return [NodeType.LOOP, NodeType.IF, NodeType.ASSIGNMENT, NodeType.PRINT]
+            case NodeType.VAR | NodeType.INTEGER | NodeType.MATH_EXPRESSION:
+                return [NodeType.VAR, NodeType.INTEGER, NodeType.MATH_EXPRESSION]
+            case _:
+                return [self.n_type]
+
     def __str__(self) -> str:
         match self.n_type:
             case NodeType.LOOP:
-                return f'for {self.attributes["iterations"]} {self.children[0]}'
+                return f"while ({self.children[0]}) {self.children[1]}"
             case NodeType.IF:
-                return f'if ({self.attributes["condition"]}) {self.children[0]}'
+                return f"if ({self.children[0]}) {self.children[1]}"
             case NodeType.ASSIGNMENT:
                 return f"{self.children[0]} = {self.children[1]};\n"
             case NodeType.PRINT:
@@ -145,6 +177,12 @@ class Program:
             )
         self.root = self._generate_program()
 
+    @classmethod
+    def from_root(cls, root):
+        program = cls()
+        program.root = root
+        return program
+
     def _generate_program(self):
         root = Node(NodeType.BLOCK_STATEMENT, is_root=True)
         if self.max_depth == 0:
@@ -188,8 +226,8 @@ class Program:
         node = Node(
             NodeType.LOOP,
             parent=parent,
-            attributes={"iterations": random.randint(1, self.max_iterations)},
         )
+        node.children.append(self._generate_condition(node))
         node.children.append(self._generate_block_statement(node))
         return node
 
@@ -205,7 +243,8 @@ class Program:
             NodeType.IF,
             parent=parent,
         )
-        node.attributes = {"condition": self._generate_condition(node)}
+        # node.attributes = {"condition": self._generate_condition(node)}
+        node.children.append(self._generate_condition(node))
         node.children.append(self._generate_block_statement(node))
         return node
 

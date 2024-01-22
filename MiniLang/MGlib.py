@@ -22,9 +22,10 @@ class MGlib:
         self.population = [
             self.create_individual() for _ in range(self.parameters.population_size)
         ]
-        self.fitnesses = [
-            self.compute_fitness(individual) for individual in self.population
-        ]
+        self.fitnesses = {
+            i: self.compute_fitness(individual)
+            for i, individual in enumerate(self.population)
+        }
         self.best_idx = 0
         self.best_fitness = -1000000.0
         self.best_generation = 0
@@ -54,9 +55,7 @@ class MGlib:
         fitness = 0
         for idx in range(len(self.inputs)):
             ind = str(individual)
-            program_output, *_ = Interpreter.run(
-                ind, self.inputs[idx], from_file=False
-            )
+            program_output, *_ = Interpreter.run(ind, self.inputs[idx], from_file=False)
             fitness += self.fitness_function(program_output, self.outputs[idx])
         return fitness
 
@@ -75,26 +74,58 @@ class MGlib:
         pass
 
     def select_best(self):
-        best_fitness = max(self.fitnesses)
-        best_idx = self.fitnesses.index(best_fitness)
-        val = self.fitnesses[best_idx]
-        if val > self.best_fitness:
-            self.best_fitness = val
+        best_idx = max(self.fitnesses, key=lambda key: self.fitnesses[key])
+        best_fitness = self.fitnesses[best_idx]
+        if best_fitness > self.best_fitness:
+            self.best_fitness = best_fitness
             self.best_idx = best_idx
             self.best = self.population[best_idx]
         print(f"Best fitness: {self.best_fitness}")
         return best_idx
 
     def select_worst(self):
-        worst_fitness = min(self.fitnesses)
-        worst_idx = self.fitnesses.index(worst_fitness)
+        worst_idx = min(self.fitnesses, key=lambda key: self.fitnesses[key])
+        worst_fitness = self.fitnesses[worst_idx]
         return worst_idx, worst_fitness
 
     def crossover(self):
-        pass
+        p1, p2 = random.sample(self.population, 2)
+        parent1 = p1.root.copy()
+        parent2 = p2.root.copy()
+        self._crossover(parent1, parent2)
+
+    def _crossover(self, parent1, parent2):
+        iterations = 0
+        while True:
+            child1 = random.choice(parent1.children)
+            child2 = random.choice(parent2.children)
+            if child1.get_compatible_types() == child2.get_compatible_types():
+                break
+            parent1 = child1 if child1.children and random.random() < 0.7 else parent1
+            parent2 = child2 if child2.children and random.random() < 0.7 else parent2
+            iterations += 1
+            if iterations > 10:
+                print("Iterations exceeded")
+                return self.crossover()
+
+        parent1.replace_child(child1, child2)
+        while not parent1.is_root:
+            parent1 = parent1.parent
+
+        self.population.append(Program.from_root(parent1))
 
     def mutate(self):
-        pass
+        p = random.choice(self.population)
+        parent1 = p.root.copy()
+        parent2 = Program(
+            self.parameters.max_depth,
+            self.parameters.max_width,
+            self.method
+            if self.method == GenerationMethod.FULL
+            else GenerationMethod.GROW,
+            self.max_iterations,
+        ).root
+        self._crossover(parent1, parent2)
 
     def run(self):
         found = False
@@ -112,9 +143,11 @@ class MGlib:
                 self.save_result_to_file(i, False, self.best_fitness)
             rand_prob = random.random()
             if rand_prob < self.parameters.crossover_prob:
-                self.crossover()
+                for _ in range(self.parameters.population_size // 3):
+                    self.crossover()
             else:
-                self.mutate()
+                for _ in range(self.parameters.population_size // 3):
+                    self.mutate()
             # worst_index, worst_fitness = self.select_worst()
             # worst = self.population[worst_index]
             # p = self.create_individual()
@@ -128,9 +161,6 @@ class MGlib:
     def print_individual(self, index: int):
         individual_program = self.population[index]
         ind_str = str(individual_program)
-        program_output, program_input, program_variables = Interpreter.run(
-            ind_str, self.inputs[index], from_file=False
-        )
         print("---------------------")
         print("Program: ")
         print(individual_program)
