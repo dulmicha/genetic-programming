@@ -4,6 +4,7 @@ from parameters import Params
 from fitness_functions import get_fitness_function
 from antlr4 import *
 import random
+import os
 
 
 class MGlib:
@@ -37,18 +38,18 @@ class MGlib:
         return get_fitness_function(self.example)(program_output, expected_output)
 
     def create_individual(self):
-        if self.method == GenerationMethod.HALF_HALF:
-            return Program(
-                self.parameters.max_depth,
-                self.parameters.max_width,
-                random.choice([GenerationMethod.FULL, GenerationMethod.GROW]),
-                self.max_iterations,
-            )
+        method = (
+            self.method
+            if self.method != GenerationMethod.HALF_HALF
+            else random.choice([GenerationMethod.FULL, GenerationMethod.GROW])
+        )
         return Program(
             self.parameters.max_depth,
             self.parameters.max_width,
-            self.method,
+            method,
             self.max_iterations,
+            -100,
+            100,
         )
 
     def compute_fitness(self, individual):
@@ -59,6 +60,9 @@ class MGlib:
             fitness += self.fitness_function(program_output, self.outputs[idx])
         return fitness
 
+    def compute_avg_fitness(self):
+        return sum(self.fitnesses.values()) / len(self.fitnesses)
+
     def display_population_fitness(self):
         for idx, individual in enumerate(self.population):
             print(f"Program {idx + 1}:\n{individual}\n{self.fitnesses[idx]}\n")
@@ -68,7 +72,11 @@ class MGlib:
             print(f"Program {idx + 1}:\n{individual}\n")
 
     def select_tournament(self):
-        tournament_size = self.parameters.tournament_size
+        tournament = random.sample(
+            self.fitnesses.keys(), self.parameters.tournament_size
+        )
+        best_idx = max(tournament, key=lambda key: self.fitnesses[key])
+        return self.population[best_idx]
 
     def select_neg_tournament(self):
         pass
@@ -88,13 +96,13 @@ class MGlib:
         worst_fitness = self.fitnesses[worst_idx]
         return worst_idx, worst_fitness
 
-    def crossover(self):
-        p1, p2 = random.sample(self.population, 2)
+    def crossover(self) -> Program:
+        p1, p2 = self.select_tournament(), self.select_tournament()
         parent1 = p1.root.copy()
         parent2 = p2.root.copy()
-        self._crossover(parent1, parent2)
+        return self._crossover(parent1, parent2)
 
-    def _crossover(self, parent1, parent2):
+    def _crossover(self, parent1, parent2) -> Program:
         iterations = 0
         while True:
             child1 = random.choice(parent1.children)
@@ -112,10 +120,10 @@ class MGlib:
         while not parent1.is_root:
             parent1 = parent1.parent
 
-        self.population.append(Program.from_root(parent1))
+        return Program.from_root(parent1)
 
-    def mutate(self):
-        p = random.choice(self.population)
+    def mutate(self) -> Program:
+        p = self.select_tournament()
         parent1 = p.root.copy()
         parent2 = Program(
             self.parameters.max_depth,
@@ -125,15 +133,15 @@ class MGlib:
             else GenerationMethod.GROW,
             self.max_iterations,
         ).root
-        self._crossover(parent1, parent2)
+        return self._crossover(parent1, parent2)
 
-    def run(self):
+    def run(self, serialize=False):
         found = False
         for gen in range(self.parameters.generations):
-            for idx, individual in enumerate(self.population):
-                self.fitnesses[idx] = self.compute_fitness(individual)
             i = self.select_best()
-            print(f"Generation {gen + 1}, best fitness: {self.best_fitness}")
+            print(
+                f"Generation {gen + 1}, best fitness: {self.best_fitness}, avg fitness: {self.compute_avg_fitness()}\n"
+            )
             if self.best_fitness == 0.0:
                 self.save_result_to_file(i, True, self.best_fitness)
                 print("Problem solved!\n")
@@ -141,22 +149,26 @@ class MGlib:
                 break
             else:
                 self.save_result_to_file(i, False, self.best_fitness)
-            rand_prob = random.random()
-            if rand_prob < self.parameters.crossover_prob:
-                for _ in range(self.parameters.population_size // 3):
-                    self.crossover()
-            else:
-                for _ in range(self.parameters.population_size // 3):
-                    self.mutate()
-            # worst_index, worst_fitness = self.select_worst()
-            # worst = self.population[worst_index]
-            # p = self.create_individual()
-            # self.population[worst_index] = p
+            worst_index, worst_fitness = self.select_worst()
+            new_fitness = worst_fitness
+            while new_fitness <= worst_fitness:
+                rand_prob = random.random()
+                if rand_prob < self.parameters.crossover_prob:
+                    new_individual = self.crossover()
+                else:
+                    new_individual = self.mutate()
+                new_fitness = self.compute_fitness(new_individual)
+
+            self.fitnesses[worst_index] = new_fitness
+            self.population[worst_index] = new_individual
             self.generation += 1
 
         if not found:
             print(f"Problem not solved")
             print(f"Best fitness: {self.best_fitness}\n")
+        
+        if serialize:
+            self.serialize_population()
 
     def print_individual(self, index: int):
         individual_program = self.population[index]
@@ -179,6 +191,11 @@ class MGlib:
             f.write(
                 f"Fitness values: {best_fitness}, Generation: {self.generation + 1}\n"
             )
+
+    def serialize_population(self):
+        os.makedirs(self.example, exist_ok=True)
+        for i, individual in enumerate(self.population):
+            individual.save(os.path.join(self.example, f"individual{i}.pkl"))
 
 
 def serialize_deserialize():
