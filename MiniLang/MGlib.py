@@ -34,6 +34,19 @@ class MGlib:
         self.generation = 0
         self.avg_fitness = -1.0
 
+    @classmethod
+    def from_serialized_population(cls, population_path, inputs, outputs, parameters, example):
+        lib = cls(inputs, outputs, parameters, example)
+        lib.population = [
+            Program.load(os.path.join(population_path, f"individual{i}.pkl"))
+            for i in range(lib.population_size)
+        ]
+        lib.fitnesses = {
+            i: lib.compute_fitness(individual)
+            for i, individual in enumerate(lib.population)
+        }
+        return lib
+    
     def fitness_function(self, program_output, expected_output):
         return get_fitness_function(self.example)(program_output, expected_output)
 
