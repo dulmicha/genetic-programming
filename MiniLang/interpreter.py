@@ -11,9 +11,10 @@ class Interpreter:
         filename,
         inputs,
         from_file=True,
-        instruction_limit=400,
+        instruction_limit=50,
         output_limit=1000,
         strict_mode=False,
+        verbose=False,
     ):
         if from_file:
             input_stream = FileStream(filename, encoding="utf-8")
@@ -31,9 +32,11 @@ class Interpreter:
             OutputLimitExceededException,
             ZeroDivisionError,
         ) as e:
-            print(e)
+            if verbose:
+                print(e)
+            pass
 
-        return visitor.output, visitor.variables, visitor.instruction_counter
+        return visitor.output, visitor.variables, visitor.instruction_counter, visitor.uninitialised_references
 
 
 if __name__ == "__main__":
