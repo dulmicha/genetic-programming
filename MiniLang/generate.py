@@ -25,6 +25,15 @@ class NodeType(Enum):
     BOOLEAN = auto()
 
 
+expression_like = [
+    NodeType.MATH_EXPRESSION,
+    NodeType.CONDITION_BODY,
+    NodeType.CONDITION,
+    NodeType.VAR,
+    NodeType.INTEGER,
+]
+
+
 class ArithmeticOperator(Enum):
     PLUS = "+"
     MINUS = "-"
@@ -77,16 +86,18 @@ class Node:
 
     def __eq__(self, __value: object) -> bool:
         if isinstance(__value, Node):
-            return (
-                self.n_type == __value.n_type
-                and self.value == __value.value
-                and self.children == __value.children
-            )
-        print("Not a node")
+            return str(self) == str(__value)
+        # print("Not a node")
         return self.value == __value
 
     def copy(self):
-        return replace(self, children=[child.copy() for child in self.children])
+        return replace(
+            self,
+            children=[
+                child.copy() if isinstance(child, Node) else child
+                for child in self.children
+            ],
+        )
 
     def replace_child(self, curr_child, new_child):
         if not self.children:
@@ -132,7 +143,7 @@ class Node:
             case NodeType.PRINT:
                 return f"print({self.children[0]});\n"
             case NodeType.CONDITION:
-                return f"{self.children[0]}"
+                return f"{self.children[0]}{' ' if len(self.children) > 1 else ''}{' '.join([str(operator) + ' ' + str(child) for operator, child in zip(self.attributes['operators'], self.children[1:])])}"
             case NodeType.CONDITION_BODY:
                 return f'{self.children[0]} {self.attributes["operator"]} {self.children[1]}'
             case NodeType.INPUT:
@@ -165,7 +176,6 @@ class Program:
     max_depth: int = 0
     max_width: int = 1
     method: GenerationMethod = GenerationMethod.GROW
-    max_iterations: int = 100
     min_integer: int = 0
     max_integer: int = 10
     root: Node = field(init=False)
@@ -243,7 +253,6 @@ class Program:
             NodeType.IF,
             parent=parent,
         )
-        # node.attributes = {"condition": self._generate_condition(node)}
         node.children.append(self._generate_condition(node))
         node.children.append(self._generate_block_statement(node))
         return node
@@ -264,9 +273,11 @@ class Program:
 
     def _generate_condition(self, parent):
         node = Node(NodeType.CONDITION, parent=parent)
-        node.children.append(
-            self._generate_condition_body(node)
-        )  # excluding longer conditions
+        node.children.append(self._generate_condition_body(node))
+        node.attributes = {"operators": []}
+        for _ in range(random.randint(0, 2)):
+            node.attributes["operators"].append(random.choice(list(LogicalOperator)))
+            node.children.append(self._generate_condition_body(node))
         return node
 
     def _generate_variable(self, parent, generation_probability=0.5):
@@ -295,9 +306,11 @@ class Program:
     def _count_nested_expressions(self, node):
         nested_expressions = 0
         while node.parent:
-            if node.n_type == NodeType.MATH_EXPRESSION:
+            if node.n_type in expression_like:
                 nested_expressions += 1
-            node = node.parent
+                node = node.parent
+            else:
+                break
         return nested_expressions
 
     def _generate_expression(self, parent, var_generation_probability=0.5):
@@ -305,8 +318,9 @@ class Program:
         if parent.variables:
             expr_types.append(NodeType.VAR)
         if (
-            self._count_nested_expressions(parent) < self.max_width
-            and parent.level < self.max_depth
+            self._count_nested_expressions(parent) + parent.level
+            < self.max_depth
+            # and parent.level < self.max_depth
         ):
             expr_types.append(NodeType.MATH_EXPRESSION)
         _expr_type = random.choice(expr_types)

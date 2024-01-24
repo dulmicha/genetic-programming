@@ -22,6 +22,7 @@ class MiniLangVisitor(ParseTreeVisitor):
         self.instruction_limit = instruction_limit
         self.instruction_counter = 0
         self.strict_mode = strict_mode
+        self.uninitialised_references = 0
 
     def get_next_input(self):
         if self.input_index >= len(self.input_values):
@@ -112,10 +113,12 @@ class MiniLangVisitor(ParseTreeVisitor):
                 variable_name = ctx.getText()
                 return self.variables.get(variable_name)
             else:
+                self.uninitialised_references += 1
                 raise VariableNotInitializedException("Zmienna niezainicjalizowana")
         elif ctx.var():
             variable_name = ctx.getChild(0).getText()
             if variable_name not in self.variables:
+                self.uninitialised_references += 1
                 self.variables[variable_name] = self.get_next_input()
             return self.variables[variable_name]
         elif ctx.math_expression():
@@ -158,6 +161,7 @@ class MiniLangVisitor(ParseTreeVisitor):
     def visitVar(self, ctx: MiniLangParser.VarContext):
         variable_name = ctx.getText()
         if variable_name not in self.variables:
+            self.uninitialised_references += 1
             self.variables[variable_name] = self.get_next_input()
         return self.variables[variable_name]
 
