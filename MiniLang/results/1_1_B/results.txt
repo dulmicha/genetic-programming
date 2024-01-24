@@ -1,0 +1,22 @@
+Parameters:
+POPULATION_SIZE=5
+MAX_DEPTH=1
+MAX_WIDTH=10
+CROSSOVER_PROB=1
+MUTATION_PROB=0
+GENERATIONS=5
+TOURNAMENT_SIZE=3
+MIN_INT=-100
+MAX_INT=100
+----------------------------------
+
+Problem not solved
+X_0 = ((52 * X_0) - 4);
+print(-25);
+print((68 + 30));
+print(X_0);
+X_1 = 5;
+print((68 + 30));
+print((89 + (95 + 25)));
+
+Fitness values: -1161.0, Generation: 5

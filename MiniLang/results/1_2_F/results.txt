@@ -1,0 +1,16 @@
+Parameters:
+POPULATION_SIZE=100
+MAX_DEPTH=2
+MAX_WIDTH=5
+CROSSOVER_PROB=0.7
+MUTATION_PROB=0.1
+GENERATIONS=1000
+TOURNAMENT_SIZE=5
+MIN_INT=-100
+MAX_INT=100
+----------------------------------
+
+Problem not solved
+print(9);
+
+Fitness values: -770.0, Generation: 198
