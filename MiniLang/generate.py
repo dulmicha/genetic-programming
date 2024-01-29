@@ -3,9 +3,8 @@ import pickle
 from enum import Enum, auto
 from dataclasses import dataclass, field, replace
 
-from MiniLang.errors import InvalidGenerationError
+from errors import InvalidGenerationError
 
-# INDENT = "\t"
 INDENT = "  "
 
 
@@ -178,6 +177,7 @@ class Program:
     method: GenerationMethod = GenerationMethod.GROW
     min_integer: int = 0
     max_integer: int = 10
+    max_expression_depth: int = 3
     root: Node = field(init=False)
 
     def __post_init__(self):
@@ -319,8 +319,7 @@ class Program:
             expr_types.append(NodeType.VAR)
         if (
             self._count_nested_expressions(parent) + parent.level
-            < self.max_depth
-            # and parent.level < self.max_depth
+            < self.max_expression_depth
         ):
             expr_types.append(NodeType.MATH_EXPRESSION)
         _expr_type = random.choice(expr_types)

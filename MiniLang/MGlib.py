@@ -36,19 +36,22 @@ class MGlib:
 
     @classmethod
     def from_serialized_population(cls, population_path, inputs, outputs, parameters, example):
+        print("From serialized population: ", population_path)
+        parameters.population_size = 1
         lib = cls(inputs, outputs, parameters, example)
+        lib.population_size = lib.parameters.population_size = len(os.listdir(population_path))
         lib.population = [
             Program.load(os.path.join(population_path, f"individual{i}.pkl"))
             for i in range(lib.population_size)
         ]
         lib.fitnesses = {
-            i: lib.compute_fitness(individual)
+            i: lib.compute_fitness(individual, True)
             for i, individual in enumerate(lib.population)
         }
         return lib
     
-    def fitness_function(self, program_output, expected_output):
-        return get_fitness_function(self.example)(program_output, expected_output)
+    def fitness_function(self, program_output, expected_output, inputs=None):
+        return get_fitness_function(self.example)(program_output, expected_output, inputs)
 
     def create_individual(self):
         method = (
@@ -71,7 +74,7 @@ class MGlib:
         for idx in range(len(self.inputs)):
             ind = str(individual)
             program_output, *_, uninitialized_references = Interpreter.run(ind, self.inputs[idx], from_file=False)
-            fitness += self.fitness_function(program_output, self.outputs[idx]) - (uninitialized_references / len(self.inputs))
+            fitness += self.fitness_function(program_output, self.outputs[idx], self.inputs[idx]) - (uninitialized_references / len(self.inputs))
         return round(fitness, 2)
 
     def compute_avg_fitness(self):
@@ -134,9 +137,11 @@ class MGlib:
             parent1 = child1 if child1.children and random.random() < 0.7 else parent1
             parent2 = child2 if child2.children and random.random() < 0.7 else parent2
             iterations += 1
-            if iterations > 10:
-                return self.crossover()
+            if iterations > 100:
+                return self.crossover() if random.random() < self.parameters.crossover_prob else self.mutate()
 
+        child2 = child2.copy()
+        child2.parent = child1.parent
         parent1.replace_child(child1, child2)
         while not parent1.is_root:
             parent1 = parent1.parent
@@ -172,25 +177,21 @@ class MGlib:
             else:
                 self.save_result_to_file(i, False, self.best_fitness)
             
-            worst_index = self.select_neg_tournament_idx()
-            worst_fitness = self.fitnesses[worst_index]
-            new_fitness = worst_fitness - 1
-            tries = 0
-            while new_fitness < worst_fitness:
+            for i in range(self.population_size):
+                print(f"Operation {i+1} of {self.population_size}", end="\r")
+                worst_index = self.select_neg_tournament_idx()
                 rand_prob = random.random()
                 if rand_prob < self.parameters.crossover_prob:
                     new_individual = self.crossover()
                 else:
                     new_individual = self.mutate()
                 new_fitness = self.compute_fitness(new_individual)
-                tries += 1
-                if tries > 10:
-                    self.escape_local_optimum()
-                    tries = 0
+                self.fitnesses[worst_index] = new_fitness
+                self.population[worst_index] = new_individual
 
-            self.fitnesses[worst_index] = new_fitness
-            self.population[worst_index] = new_individual
             self.generation += 1
+            print(end="\r")
+            print("\n")
 
         if not found:
             print(f"Problem not solved")
