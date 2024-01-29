@@ -1,18 +1,20 @@
 Parameters:
-POPULATION_SIZE=500
+POPULATION_SIZE=200
 MAX_DEPTH=1
 MAX_WIDTH=5
-CROSSOVER_PROB=0.7
-MUTATION_PROB=0.1
+CROSSOVER_PROB=0.5
+MUTATION_PROB=0.2
 GENERATIONS=1000
-TOURNAMENT_SIZE=30
-MIN_INT=-10
-MAX_INT=10000
+TOURNAMENT_SIZE=10
+MIN_INT=-100
+MAX_INT=50000
 ----------------------------------
 
-Problem not solved
-print(788);
-print(788);
+Problem solved
+print((36580 - 35791));
 X_0 = input();
+print(818);
+print((43373 - 39694));
+print((43373 - 39694));
 
-Fitness values: -12, Generation: 1000
+Fitness values: 0.0, Generation: 72

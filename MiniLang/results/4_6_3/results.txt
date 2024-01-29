@@ -1,0 +1,35 @@
+Parameters:
+POPULATION_SIZE=100
+MAX_DEPTH=2
+MAX_WIDTH=5
+CROSSOVER_PROB=0.7
+MUTATION_PROB=0.1
+GENERATIONS=1000
+TOURNAMENT_SIZE=10
+MIN_INT=-100
+MAX_INT=100
+----------------------------------
+
+Problem not solved
+while (-45 >= -87) {
+  X_0 = 76;
+  }
+print(50);
+if (84 > 90) {
+  print(30);
+  print(12);
+  }
+while (15 < -82 and 73 <= 13 or -21 > 58) {
+  X_0 = input();
+  print(X_0);
+  X_1 = -75;
+  X_2 = 55;
+  }
+while (15 < -82 and 73 <= 13 or -21 > 58) {
+  X_0 = input();
+  print(X_0);
+  X_1 = -75;
+  X_2 = 55;
+  }
+
+Fitness values: -7800.0, Generation: 262

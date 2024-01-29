@@ -1,27 +1,31 @@
 Parameters:
-POPULATION_SIZE=50
+POPULATION_SIZE=250
 MAX_DEPTH=2
-MAX_WIDTH=5
-CROSSOVER_PROB=0.7
-MUTATION_PROB=0.1
+MAX_WIDTH=6
+CROSSOVER_PROB=0.6
+MUTATION_PROB=0.2
 GENERATIONS=1000
-TOURNAMENT_SIZE=5
-MIN_INT=-100
+TOURNAMENT_SIZE=10
+MIN_INT=-1000
 MAX_INT=1000
 ----------------------------------
 
 Problem not solved
-if (268 >= 80 or 81 > 448) {
+if (88 != 984 or -146 == -292) {
   X_0 = input();
   X_0 = input();
-  X_1 = input();
-  print(X_0);
+  X_1 = -949;
   }
-if (268 >= 80 or 81 > 448) {
-  X_0 = input();
-  X_0 = input();
+if (649 < X_0) {
   X_1 = input();
+  X_1 = input();
+  X_2 = input();
+  X_3 = X_2;
+  }
+if (-743 > -770) {
+  X_0 = input();
   print(X_0);
+  X_0 = input();
   }
 
-Fitness values: -200.0, Generation: 1000
+Fitness values: -250.0, Generation: 108

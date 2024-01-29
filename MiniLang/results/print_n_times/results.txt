@@ -1,0 +1,31 @@
+Parameters:
+POPULATION_SIZE=50
+MAX_DEPTH=2
+MAX_WIDTH=4
+CROSSOVER_PROB=0.5
+MUTATION_PROB=0.2
+GENERATIONS=1000
+TOURNAMENT_SIZE=2
+MIN_INT=-1000
+MAX_INT=1000
+----------------------------------
+
+Problem not solved
+if (248 < -875 and 195 > 151 or -444 <= 38) {
+  X_0 = -266;
+  print(60);
+  print(8);
+  print(890);
+  }
+if (352 >= 309) {
+  print(827);
+  print(557);
+  }
+while (X_0 > 278) {
+  print(191);
+  X_0 = input();
+  X_1 = -246;
+  print(452);
+  }
+
+Fitness values: -99000.0, Generation: 2
