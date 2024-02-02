@@ -1,31 +1,28 @@
 Parameters:
-POPULATION_SIZE=100
+POPULATION_SIZE=1000
 MAX_DEPTH=2
 MAX_WIDTH=4
 CROSSOVER_PROB=0.5
 MUTATION_PROB=0.2
 GENERATIONS=1000
-TOURNAMENT_SIZE=10
+TOURNAMENT_SIZE=20
 MIN_INT=-1000
 MAX_INT=1000
 ----------------------------------
 
 Problem not solved
-if (-941 == 335 and 61 >= -411) {
-  print(-234);
-  print(-334);
-  print(777);
-  }
-if (802 <= 808 or 252 != 729 and 456 != -634) {
-  X_0 = input();
-  print(X_0);
-  X_1 = input();
+if (X_1 == X_0 or X_1 <= X_0) {
   X_2 = input();
-  }
-if (X_0 <= X_1) {
-  print(X_2);
+  X_1 = -174;
+  print(X_0);
   X_3 = input();
-  X_4 = input();
+  }
+if (8 != 283) {
+  X_0 = input();
+  X_1 = input();
+  }
+if (X_0 > X_1 and -345 <= 249 and 191 >= 153) {
+  print(X_0);
   }
 
-Fitness values: -240.0, Generation: 544
+Fitness values: -2.0, Generation: 1000

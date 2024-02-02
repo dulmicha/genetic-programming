@@ -178,6 +178,7 @@ class Program:
     min_integer: int = 0
     max_integer: int = 10
     max_expression_depth: int = 3
+    allow_uninitialised: bool = False
     root: Node = field(init=False)
 
     def __post_init__(self):
@@ -186,6 +187,17 @@ class Program:
                 "Generation method HALF_HALF is used for population generation."
             )
         self.root = self._generate_program()
+
+    def __eq__(self, __value: object) -> bool:
+        if isinstance(__value, Program):
+            return str(self) == str(__value)
+        return False
+
+    def __len__(self):
+        return len(str(self).split("\n"))
+
+    def copy(self):
+        return replace(self, root=self.root.copy())
 
     @classmethod
     def from_root(cls, root):
@@ -264,10 +276,14 @@ class Program:
             attributes={"operator": random.choice(list(ComparisonOperator))},
         )
         node.children.append(
-            self._generate_expression(node, var_generation_probability=0)
+            self._generate_expression(
+                node, var_generation_probability=0.5 if self.allow_uninitialised else 1
+            )
         )
         node.children.append(
-            self._generate_expression(node, var_generation_probability=0)
+            self._generate_expression(
+                node, var_generation_probability=0.5 if self.allow_uninitialised else 1
+            )
         )  # excluding boolean
         return node
 
@@ -315,10 +331,10 @@ class Program:
 
     def _generate_expression(self, parent, var_generation_probability=0.5):
         expr_types = [NodeType.INTEGER]
-        if parent.variables:
+        if parent.variables or self.allow_uninitialised:
             expr_types.append(NodeType.VAR)
         if (
-            self._count_nested_expressions(parent) + parent.level
+            self._count_nested_expressions(parent) + parent.level - 3
             < self.max_expression_depth
         ):
             expr_types.append(NodeType.MATH_EXPRESSION)

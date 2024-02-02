@@ -55,6 +55,9 @@ class MiniLangVisitor(ParseTreeVisitor):
 
     # Visit a parse tree produced by MiniLangParser#condition.
     def visitCondition(self, ctx: MiniLangParser.ConditionContext):
+        self.instruction_counter += 1
+        if self.instruction_counter >= self.instruction_limit:
+            raise InstructionLimitExceededException("Przekroczono limit instrukcji")
         final_condition = self.visitCondition_body(ctx.getChild(0))
         if ctx.getChildCount() > 1:
             for i in range(1, ctx.getChildCount(), 2):
