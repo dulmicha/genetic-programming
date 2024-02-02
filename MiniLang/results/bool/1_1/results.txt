@@ -1,0 +1,18 @@
+Parameters:
+POPULATION_SIZE=50
+MAX_DEPTH=1
+MAX_WIDTH=5
+CROSSOVER_PROB=0.45
+GENERATIONS=101
+TOURNAMENT_SIZE=3
+MIN_INT=-100
+MAX_INT=100
+----------------------------------
+
+Problem solved
+X_0 = input();
+print(X_0);
+X_0 = -77;
+X_0 = -94;
+
+Fitness values: 0.0, Generation: 1

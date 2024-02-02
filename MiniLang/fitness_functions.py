@@ -173,6 +173,17 @@ def fitness_print_n_times(out, expected, inputs):
         return -100000000.0
     return abs(len(out) - inputs[0]) * -1000
 
+def fitness_boolean(out, expected, inputs):
+    if len(out) == 0:
+        return -1000000.0
+    if len(out) == 1 and out[0] == expected[0]:
+        return 0.0
+    elif len(out) == 1 and out[0] != expected[0]:
+        return abs(out[0] - expected[0]) * -100
+    else:
+        return len(out) * -1000
+        
+
 fitness_functions = {
     "1_1_A": fitness_1_1_A,
     "1_1_B": fitness_1_1_B,
@@ -193,6 +204,12 @@ fitness_functions = {
     "9_6_8": fitness_9_6_8,
     "pass_inputs": fitness_pass_inputs,
     "print_n_times": fitness_print_n_times,
+    "1_1": fitness_boolean,
+    "1_2": fitness_boolean,
+    "2_1": fitness_boolean,
+    "2_2": fitness_boolean,
+    "2_3": fitness_boolean,
+    "2_4": fitness_boolean,
 }
 
 def get_fitness_function(fitness_function_name):

@@ -1,0 +1,7 @@
+1. k = 1 
+    1. D0
+    2. NOT(D0)
+2. k = 2
+    1. D0 AND D1
+    2. D0 OR D1
+    3. D0 XOR D1
