@@ -12,7 +12,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 ## Przykładowe zadania testowe
 - 1.1.A Program powinien wygenerować na wyjściu (na dowolnej pozycji w danych wyjściowych) liczbę 1. Poza liczbą 1 może też zwrócić inne liczby.
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_1_A(out, expected, inputs):
     fit = 0
     if len(out) == 0:
@@ -44,7 +44,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
   ```
 - 1.1.B Program powinien wygenerować na wyjściu (na dowolnej pozycji w danych wyjściowych) liczbę 789. Poza liczbą 789 może też zwrócić inne liczby.
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_1_B(out, expected, inputs):
     if len(out) == 0:
         return -1000000.0
@@ -77,7 +77,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.1.C Program powinien wygenerować na wyjściu (na dowolnej pozycji w danych wyjściowych) liczbę 31415. Poza liczbą 31415 może też zwrócić inne liczby.
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_1_C(out, expected, inputs):
     fit = 0
     if len(out) == 0:
@@ -114,7 +114,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.1.D Program powinien wygenerować na pierwszej pozycji na wyjściu liczbę 1. Poza liczbą 1 może też zwrócić inne liczby.
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_1_D(out, expected, inputs):
     fit = 0
     if len(out) == 0:
@@ -152,7 +152,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.1.E Program powinien wygenerować na pierwszej pozycji na wyjściu liczbę 789. Poza liczbą 789 może też zwrócić inne liczby.
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_1_E(out, expected, inputs):
     fit = 0
     if len(out) == 0:
@@ -189,7 +189,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.1.F Program powinien wygenerować na wyjściu liczbę jako jedyną liczbę 1. Poza liczbą 1 NIE powinien nic więcej wygenerować.
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_1_F(out, expected, inputs):
     fit = 0
     if len(out) == 0:
@@ -223,7 +223,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.2.A Program powinien odczytać dwie pierwsze liczy z wejścia i zwrócić na wyjściu (jedynie) ich sumę. Na wejściu mogą być tylko całkowite liczby dodatnie w zakresie [0,9]
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_2_A(out, expected, inputs):
     if len(out) == 1 and out[0] == expected[0]:
         return 0.0
@@ -262,7 +262,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.2.B Program powinien odczytać dwie pierwsze liczy z wejścia i zwrócić na wyjściu (jedynie) ich sumę. Na wejściu mogą być tylko całkowite liczby w zakresie [-9,9]
   - funkcja dopasowania:
-  ```{python}
+  ```python
   # taka sama jak 1.2.A
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
@@ -290,7 +290,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.2.C Program powinien odczytać dwie pierwsze liczy z wejścia i zwrócić na wyjściu (jedynie) ich sumę. Na wejściu mogą być tylko całkowite liczby dodatnie w zakresie [-9999,9999]
   - funkcja dopasowania:
-  ```{python}
+  ```python
     # taka sama jak 1.2.A
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
@@ -319,7 +319,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.2.D Program powinien odczytać dwie pierwsze liczy z wejścia i zwrócić na wyjściu (jedynie) ich różnicę. Na wejściu mogą być tylko całkowite liczby dodatnie w zakresie [-9999,9999]
   - funkcja dopasowania:
-  ```{python}
+  ```python
     # taka sama jak 1.2.A
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
@@ -347,7 +347,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.2.E Program powinien odczytać dwie pierwsze liczy z wejścia i zwrócić na wyjściu (jedynie) ich iloczyn. Na wejściu mogą być tylko całkowite liczby dodatnie w zakresie [-9999,9999]
   - funkcja dopasowania:
-  ```{python}
+  ```python
     # taka sama jak 1.2.A
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
@@ -374,7 +374,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.3.A Program powinien odczytać dwie pierwsze liczy z wejścia i zwrócić na wyjściu (jedynie) większą z nich. Na wejściu mogą być tylko całkowite liczby dodatnie w zakresie [0,9]
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_3_A(out, expected, inputs):
     if len(out) == 0:
         return -50.0
@@ -429,7 +429,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.3.B Program powinien odczytać dwie pierwsze liczy z wejścia i zwrócić na wyjściu (jedynie) większą z nich. Na wejściu mogą być tylko całkowite liczby w zakresie [-9999,9999]
   - funkcja dopasowania:
-  ```{python}
+  ```python
     # taka sama jak 1.3.A
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
@@ -472,7 +472,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 
 - 1.4.A Program powinien odczytać dziesięć pierwszych liczy z wejścia i zwrócić na wyjściu (jedynie) ich średnią arytmetyczną (zaokrągloną do pełnej liczby całkowitej). Na wejściu mogą być tylko całkowite liczby w zakresie [-99,99]
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_1_4_A(out, expected, inputs):
     if len(out) == 1 and out[0] == expected[0]:
         return 0.0
@@ -488,12 +488,40 @@ Autorzy: Michał Dul, Weronika Hilaszek
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
   ```
-  ?
+    Parameters:
+    POPULATION_SIZE=100
+    MAX_DEPTH=2
+    MAX_WIDTH=6
+    CROSSOVER_PROB=0.5
+    GENERATIONS=101
+    TOURNAMENT_SIZE=10
+    MIN_INT=-100
+    MAX_INT=100
+    ----------------------------------
+
+    Problem not solved
+    X_0 = input();
+    if (42 != X_0 or X_0 >= -71) {
+        print(X_0);
+        print(X_0);
+        X_0 = input();
+        X_1 = input();
+        print(X_1);
+    }
+
+    Fitness values: -1500.0, Generation: 101
+
   ``` 
 
 - 1.4.B Program powinien odczytać na początek z wejścia pierwszą liczbę (ma być to wartość nieujemna) a następnie tyle liczb (całkowitych) jaka jest wartość pierwszej odczytanej liczby i zwrócić na wyjściu (jedynie) ich średnią arytmetyczną zaokrągloną do pełnej liczby całkowitej (do średniej nie jest wliczana pierwsza odczytana liczba, która mówi z ilu liczb chcemy obliczyć średnią). Na wejściu mogą być tylko całkowite liczby w zakresie [-99,99], pierwsza liczba może być tylko w zakresie [0,99].
+  - podejście:
+    1. Wytrenować populację do wykonania pętli n razy, wczytywania liczby z wejścia w każdym przebiegu. Parametry wejściowe i znaleziony przez system rezultat dla pierwszego etapu:
+    ``` 
+    ?
+    ```
+    2. Faktyczne trenowanie zrealizować korzystając z zserializowanej populacji z pkt. 1.
   - funkcja dopasowania:
-  ```{python}
+  ```python
   ?
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
@@ -507,7 +535,7 @@ Autorzy: Michał Dul, Weronika Hilaszek
 - Number IO (1 / Q 3.5.1) Given an integer and a float, print their sum.
   Reprezentacja floata: stałoprzecinkowa, np. 3.14 to dwa integery 3 i 14
   - funkcja dopasowania:
-  ```{python}
+  ```python
   def fitness_int_float_sum(out, expected, inputs):
     if len(out) == 0:
         return -1000000.0
@@ -587,26 +615,119 @@ Autorzy: Michał Dul, Weronika Hilaszek
     ``` 
     2. Faktyczne trenowanie zrealizować korzystając z zserializowanej populacji z pkt. 1.
   - funkcja dopasowania:
-  ```{python}
-  ?
+  ```python
+  def fitness_9_6_8(out, expected, inputs):
+    if len(out) == 0:
+        return -1000000.0
+    expexted_out_len = len(expected)
+    fit = abs(len(out) - expexted_out_len) * -200.0
+    for o_idx, o in enumerate(out):
+        if o_idx >= expexted_out_len:
+            o_idx = o_idx % expexted_out_len
+        fit += min(abs(o - expected[o_idx]), 100) * -100.0
+    return fit
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
   ```
-  ?
+    Parameters:
+    POPULATION_SIZE=500
+    MAX_DEPTH=3
+    MAX_WIDTH=4
+    CROSSOVER_PROB=0.6
+    MUTATION_PROB=0.2
+    GENERATIONS=1000
+    TOURNAMENT_SIZE=2
+    MIN_INT=-1000
+    MAX_INT=1000
+    ----------------------------------
+
+    Problem not solved
+    if (617 != -301 or 212 <= 460 or -746 <= -672) {
+        X_0 = input();
+        X_1 = X_0;
+        X_0 = X_1;
+        print(X_0);
+    }
+    if (-23 <= -488) {
+        X_0 = 228;
+    }
+
+    Fitness values: -4100.0, Generation: 8
   ``` 
 - Smallest (28) Given 4 integers, print the smallest of them
   - funkcja dopasowania:
-  ```{python}
-  ?
+  ```python
+  def fitness_28(out, expected, inputs):
+    if len(out) == 0:
+        return -50.0
+    elif len(out) == 1 and out[0] == expected[0]:
+        return 0.0
+    elif len(out) == 1 and out[0] != expected[0]:
+        if out[0] in inputs:
+            return -20.0
+        else:
+            return -1000.0
+    elif len(out) > 0 and any([x in inputs for x in out]):
+        return len(out) * -1000
+    else:
+        return len(out) * -10000 if len(out) > 1 else -100000 
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
   ```
-  ?
+    Parameters:
+    POPULATION_SIZE=500
+    MAX_DEPTH=2
+    MAX_WIDTH=5
+    CROSSOVER_PROB=0.55
+    GENERATIONS=101
+    TOURNAMENT_SIZE=10
+    MIN_INT=-5
+    MAX_INT=5
+    ----------------------------------
+
+    Problem not solved
+    if (X_0 >= 5) {
+        if (X_0 >= 5) {
+            while (4 != X_0 or 1 <= 1 and X_1 > X_2) {
+                while (2 <= -2) {
+                    X_0 = -2;
+                    X_1 = 1;
+                    print(X_1);
+                    print((X_2 + 1));
+                }
+                X_1 = input();
+            }
+        }
+    }
+    if (X_0 >= 5) {
+        if (X_0 > X_0 or X_1 < 5 or X_0 >= X_1) {
+             X_0 = X_1;
+        }
+    }
+    print(X_0);
+    if (X_0 >= 5) {
+        if (X_0 > X_0 or X_1 < 5 or X_0 >= X_1) {
+            X_0 = X_1;
+        }
+    }
+    if (X_0 >= 5) {
+        if (X_0 >= 5) {
+            while (4 != X_0 or 1 <= 1 and X_1 > X_2) {
+                while (X_0 > X_0) {
+                    print((X_1 / X_2));
+                }
+                X_1 = input();
+            }
+        }
+    }
+
+    Fitness values: -122.96, Generation: 66
+
   ``` 
 
 ### Regresja boolowska
 Funkcja przystosowania (jednakowa dla każdego przypadku):
-```
+```python
 def fitness_boolean(out, expected, inputs):
     if len(out) == 0:
         return -1000000.0
@@ -865,6 +986,45 @@ def fitness_boolean(out, expected, inputs):
   - `D0 OR D1 OR D2 OR D3`
   - `D0 XOR D1 XOR D2 XOR D3`
 - `k = 5`
+  - `D0 AND D1 AND D2 AND D3 AND D4`
+  ```
+    Parameters:
+    POPULATION_SIZE=500
+    MAX_DEPTH=2
+    MAX_WIDTH=7
+    CROSSOVER_PROB=0.55
+    GENERATIONS=101
+    TOURNAMENT_SIZE=10
+    MIN_INT=0
+    MAX_INT=1
+    ----------------------------------
+
+    Problem not solved
+    while (X_2 >= 0 and X_1 > X_0 and 1 < X_1) {
+        X_0 = input();
+        X_3 = X_1;
+    }
+    if (X_1 == X_1 and 0 != 0 and X_2 <= X_2) {
+        X_1 = 0;
+        X_3 = input();
+        X_3 = X_2;
+        print(((X_4 / X_5) * X_1));
+        print((X_4 - 0));
+        X_4 = input();
+        X_0 = (X_6 / (1 + 1));
+    }
+    while (X_0 <= X_0) {
+        X_1 = X_0;
+        print(1);
+        X_1 = ((1 + 0) / 0);
+        print(0);
+        print(X_0);
+        X_1 = X_0;
+    }
+
+    Fitness values: -100.0, Generation: 101
+
+  ```
 - `k = 6`
 - `k = 7`
 - `k = 8`
