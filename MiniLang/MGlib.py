@@ -1,9 +1,8 @@
-from generate import Program, GenerationMethod, Node, NodeType
+from generate import Program, GenerationMethod
 from interpreter import Interpreter
 from parameters import Params
 from fitness_functions import get_fitness_function
 from numpy import round
-from antlr4 import *
 import random
 import os
 import time
@@ -210,7 +209,8 @@ class MGlib:
         for gen in range(self.parameters.generations):
             i = self.select_best()
             print(
-                f"Generation {gen + 1}, best fitness: {self.best_fitness}, avg fitness: {self.compute_avg_fitness()}, worst fitness {self.select_worst()[1]}\n"
+                f"Generation {gen + 1}, best fitness: {self.best_fitness}, avg fitness: {self.compute_avg_fitness()}, "
+                f"worst fitness {self.select_worst()[1]}\n"
             )
             if self.best_fitness == 0.0:
                 self.save_result_to_file(i, True, self.best_fitness)
