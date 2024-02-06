@@ -1,0 +1,28 @@
+Parameters:
+POPULATION_SIZE=500
+MAX_DEPTH=2
+MAX_WIDTH=4
+CROSSOVER_PROB=0.55
+GENERATIONS=101
+TOURNAMENT_SIZE=10
+MIN_INT=0
+MAX_INT=1
+From bool 2 3
+----------------------------------
+
+Problem solved
+if (X_1 < X_2) {
+  X_1 = input();
+  }
+if (1 <= X_2) {
+  X_1 = 0;
+  }
+if (0 >= X_0) {
+  X_0 = input();
+  X_1 = input();
+  X_2 = input();
+  X_2 = (0 * 1);
+  }
+print((X_0 * (1 - X_1)));
+
+Fitness values: 0.0, Generation: 10

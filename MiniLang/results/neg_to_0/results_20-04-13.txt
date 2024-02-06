@@ -1,0 +1,23 @@
+Parameters:
+POPULATION_SIZE=500
+MAX_DEPTH=2
+MAX_WIDTH=3
+CROSSOVER_PROB=0.55
+GENERATIONS=101
+TOURNAMENT_SIZE=10
+MIN_INT=-5
+MAX_INT=5
+----------------------------------
+
+Problem solved
+X_0 = input();
+if (-2 < -1 and X_0 < 1) {
+  X_1 = input();
+  X_1 = -4;
+  X_0 = 0;
+  }
+if (-1 <= 5) {
+  print(X_0);
+  }
+
+Fitness values: 0.0, Generation: 19
