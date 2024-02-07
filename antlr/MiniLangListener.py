@@ -44,6 +44,15 @@ class MiniLangListener(ParseTreeListener):
         pass
 
 
+    # Enter a parse tree produced by MiniLangParser#condition_body.
+    def enterCondition_body(self, ctx:MiniLangParser.Condition_bodyContext):
+        pass
+
+    # Exit a parse tree produced by MiniLangParser#condition_body.
+    def exitCondition_body(self, ctx:MiniLangParser.Condition_bodyContext):
+        pass
+
+
     # Enter a parse tree produced by MiniLangParser#input.
     def enterInput(self, ctx:MiniLangParser.InputContext):
         pass
@@ -107,48 +116,12 @@ class MiniLangListener(ParseTreeListener):
         pass
 
 
-    # Enter a parse tree produced by MiniLangParser#comparison_operator.
-    def enterComparison_operator(self, ctx:MiniLangParser.Comparison_operatorContext):
-        pass
-
-    # Exit a parse tree produced by MiniLangParser#comparison_operator.
-    def exitComparison_operator(self, ctx:MiniLangParser.Comparison_operatorContext):
-        pass
-
-
-    # Enter a parse tree produced by MiniLangParser#arithmetic_operator.
-    def enterArithmetic_operator(self, ctx:MiniLangParser.Arithmetic_operatorContext):
-        pass
-
-    # Exit a parse tree produced by MiniLangParser#arithmetic_operator.
-    def exitArithmetic_operator(self, ctx:MiniLangParser.Arithmetic_operatorContext):
-        pass
-
-
-    # Enter a parse tree produced by MiniLangParser#logical_operation.
-    def enterLogical_operation(self, ctx:MiniLangParser.Logical_operationContext):
-        pass
-
-    # Exit a parse tree produced by MiniLangParser#logical_operation.
-    def exitLogical_operation(self, ctx:MiniLangParser.Logical_operationContext):
-        pass
-
-
     # Enter a parse tree produced by MiniLangParser#var.
     def enterVar(self, ctx:MiniLangParser.VarContext):
         pass
 
     # Exit a parse tree produced by MiniLangParser#var.
     def exitVar(self, ctx:MiniLangParser.VarContext):
-        pass
-
-
-    # Enter a parse tree produced by MiniLangParser#nonzero_digit.
-    def enterNonzero_digit(self, ctx:MiniLangParser.Nonzero_digitContext):
-        pass
-
-    # Exit a parse tree produced by MiniLangParser#nonzero_digit.
-    def exitNonzero_digit(self, ctx:MiniLangParser.Nonzero_digitContext):
         pass
 
 

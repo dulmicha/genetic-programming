@@ -1,0 +1,26 @@
+Parameters:
+POPULATION_SIZE=500
+MAX_DEPTH=2
+MAX_WIDTH=4
+CROSSOVER_PROB=0.55
+GENERATIONS=101
+TOURNAMENT_SIZE=10
+MIN_INT=0
+MAX_INT=1
+----------------------------------
+
+Problem not solved
+if (X_0 < 0) {
+  X_1 = input();
+  print(((0 / 1) * 0));
+  print(0);
+  X_1 = input();
+  }
+if (X_1 == 1 or X_1 <= X_2 or X_3 == X_4) {
+  print(((0 + 0) + 1));
+  print((0 / 0));
+  X_4 = 1;
+  print(1);
+  }
+
+Fitness values: -100.0, Generation: 101

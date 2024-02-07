@@ -1,0 +1,18 @@
+Parameters:
+POPULATION_SIZE=700
+MAX_DEPTH=1
+MAX_WIDTH=5
+CROSSOVER_PROB=0.7
+MUTATION_PROB=0.1
+GENERATIONS=1000
+TOURNAMENT_SIZE=40
+MIN_INT=-100
+MAX_INT=100
+----------------------------------
+
+Problem solved
+X_2 = input();
+X_1 = input();
+print((X_1 + X_2));
+
+Fitness values: 0.0, Generation: 531

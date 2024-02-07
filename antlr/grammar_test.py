@@ -4,6 +4,7 @@ from antlr4 import *
 from MiniLangLexer import MiniLangLexer
 from MiniLangParser import MiniLangParser
 
+
 def grammar_test(filepath):
     try:
         input_stream = FileStream(filepath)
@@ -16,8 +17,10 @@ def grammar_test(filepath):
     except Exception as e:
         print(f"Error testing {filepath}: {e}")
 
+
 def get_test_files(directory):
     return [os.path.join(directory, file) for file in os.listdir(directory) if file.endswith('.minilang')]
+
 
 if __name__ == '__main__':
     test_directory = "test"

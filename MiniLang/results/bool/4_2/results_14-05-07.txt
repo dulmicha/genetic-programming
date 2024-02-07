@@ -1,0 +1,78 @@
+Parameters:
+POPULATION_SIZE=500
+MAX_DEPTH=3
+MAX_WIDTH=5
+CROSSOVER_PROB=0.55
+GENERATIONS=101
+TOURNAMENT_SIZE=10
+MIN_INT=0
+MAX_INT=1
+----------------------------------
+
+Problem not solved
+if (1 != 1 or 1 >= X_0) {
+  while (X_1 == X_1) {
+    print(1);
+    print((0 / 0));
+    }
+  }
+if (1 == X_1) {
+  if (X_2 == X_1) {
+    X_3 = input();
+    print((X_4 - X_5));
+    }
+  while (X_1 < 0) {
+    print((0 / X_1));
+    X_0 = 0;
+    print(0);
+    }
+  while (X_3 >= 1 or 0 > X_4) {
+    X_4 = input();
+    print(X_1);
+    print((X_1 * X_5));
+    X_6 = 0;
+    }
+  while (1 == X_4) {
+    X_2 = input();
+    X_5 = input();
+    print(1);
+    print(X_2);
+    print(1);
+    }
+  while (X_5 == X_6 or 1 > X_7 and 1 > 0) {
+    X_8 = 0;
+    X_3 = (1 - X_9);
+    }
+  }
+while (X_0 >= X_0) {
+  while (X_1 > X_1 and 0 != X_1 or 1 > X_0) {
+    X_2 = input();
+    X_3 = input();
+    print((X_4 * 0));
+    print(0);
+    print(1);
+    }
+  print((1 - (X_2 * X_0)));
+  print((X_0 / (X_0 * 0)));
+  X_0 = 1;
+  }
+if (1 >= 1 or 1 == 1) {
+  if (X_0 != 0) {
+    print((0 * X_0));
+    print(1);
+    print(0);
+    X_1 = input();
+    }
+  while (X_1 > 0) {
+    X_2 = 1;
+    print(0);
+    print((X_3 - X_4));
+    print(1);
+    print(X_1);
+    }
+  if (X_2 >= X_2) {
+    X_3 = 1;
+    }
+  }
+
+Fitness values: -100.0, Generation: 101
