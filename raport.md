@@ -517,12 +517,60 @@ Autorzy: Michał Dul, Weronika Hilaszek
   - podejście:
     1. Wytrenować populację do wykonania pętli n razy, wczytywania liczby z wejścia w każdym przebiegu. Parametry wejściowe i znaleziony przez system rezultat dla pierwszego etapu:
     ``` 
-    ?
+    Parameters:
+    POPULATION_SIZE=500
+    MAX_DEPTH=2
+    MAX_WIDTH=5
+    CROSSOVER_PROB=0.55
+    GENERATIONS=101
+    TOURNAMENT_SIZE=10
+    MIN_INT=0
+    MAX_INT=1
+    ----------------------------------
+
+    Problem not solved
+    if (X_0 <= X_0 or X_0 >= X_1) {
+      if (X_0 <= X_0 or X_0 >= X_1) {
+        if (X_0 <= X_0 or X_0 >= X_1) {
+          if (X_0 <= X_0 or X_0 >= X_1) {
+            if (X_0 != X_0 or 0 <= 0 or X_0 < 1) {
+              print((X_1 + 0));
+            }
+          }
+        }
+      }
+    }
+    if (0 > X_0 or X_0 != 1) {
+      X_0 = input();
+      X_1 = input();
+      print(X_0);
+      }
+    if (X_0 <= X_0 or X_0 >= X_1) {
+      print(X_1);
+      }
+    if (X_0 != 0 or X_1 >= X_1 or X_1 == 0) {
+      X_1 = input();
+      print(X_1);
+      X_1 = input();
+      print(X_1);
+      X_0 = X_1;
+      }
+
+    Fitness values: -42000.0, Generation: 101
     ```
     2. Faktyczne trenowanie zrealizować korzystając z zserializowanej populacji z pkt. 1.
   - funkcja dopasowania:
   ```python
-  ?
+  def fitness_1_4_B(out, expected, inputs):
+    if len(out) == 0:
+        return -1000000.0
+    avg = sum(inputs[1:]) // inputs[0]
+    if len(out) == 1 and out[0] == avg:
+        return 0.0
+    elif len(out) == 1 and out[0] != avg:
+        return abs(out[0] - avg) * -100
+    else:
+        return len(out) * -1000
   ```
   - parametry wejściowe i znaleziony przez system rezultat:
   ```
@@ -984,9 +1032,95 @@ def fitness_boolean(out, expected, inputs):
 
   ```
   - `D0 OR D1 OR D2 OR D3`
+  ```
+  Parameters:
+  POPULATION_SIZE=250
+  MAX_DEPTH=2
+  MAX_WIDTH=5
+  CROSSOVER_PROB=0.55
+  GENERATIONS=101
+  TOURNAMENT_SIZE=10
+  MIN_INT=0
+  MAX_INT=1
+  ----------------------------------
+
+  Problem not solved
+  if (1 == X_0 and 1 < X_1 or 0 < 1) {
+    X_2 = input();
+    print(1);
+    print((0 * (X_3 / 0)));
+    }
+  while (X_0 <= 0 or 0 <= 0 or 0 != X_0) {
+    X_0 = (1 * (1 / X_0));
+    print((X_1 * X_2));
+    X_3 = 0;
+    X_4 = input();
+    }
+
+  Fitness values: -100.0, Generation: 101
+  ```
   - `D0 XOR D1 XOR D2 XOR D3`
+  ```
+  Parameters:
+  POPULATION_SIZE=500
+  MAX_DEPTH=2
+  MAX_WIDTH=4
+  CROSSOVER_PROB=0.55
+  GENERATIONS=101
+  TOURNAMENT_SIZE=10
+  MIN_INT=0
+  MAX_INT=1
+  ----------------------------------
+
+  Problem not solved
+  if (0 == X_0) {
+    X_0 = input();
+    }
+  if (X_0 < 1) {
+    X_0 = input();
+    }
+  if (X_4 != X_2) {
+    X_5 = 0;
+    X_3 = (X_6 + 0);
+    }
+  if (0 <= X_5) {
+    print((X_6 - X_5));
+    X_7 = (X_8 / (X_9 * X_7));
+    X_10 = input();
+    }
+
+  Fitness values: -100.0, Generation: 101
+  ```
 - `k = 5`
   - `D0 AND D1 AND D2 AND D3 AND D4`
+  ```
+  Parameters:
+  POPULATION_SIZE=250
+  MAX_DEPTH=2
+  MAX_WIDTH=5
+  CROSSOVER_PROB=0.55
+  GENERATIONS=101
+  TOURNAMENT_SIZE=10
+  MIN_INT=0
+  MAX_INT=1
+  ----------------------------------
+
+  Problem not solved
+  print(0);
+  X_0 = (0 - (1 / 0));
+  while (0 >= X_0 or X_0 >= 0 or X_1 < 0) {
+    X_2 = (1 / 1);
+    }
+  while (1 != X_1 and 0 <= X_1 and X_2 == 1) {
+    X_3 = input();
+    print(((1 / X_4) + 1));
+    print((X_5 / 1));
+    }
+  print((0 * X_3));
+
+  Fitness values: -100.0, Generation: 101
+  ```
+  - `D0 OR D1 OR D2 OR D3 OR D4`
   ```
     Parameters:
     POPULATION_SIZE=500
@@ -1023,10 +1157,12 @@ def fitness_boolean(out, expected, inputs):
     }
 
     Fitness values: -100.0, Generation: 101
-
   ```
-- `k = 6`
+
+Jak widać, system dla większych k zaczyna generalizować - dla `AND` decyduje się zwracać 0 (ponieważ tylko $\frac{1}{k^2}$ przypadków powinno zwracać 1), analogicznie dla `OR` i `XOR`.
+
+<!-- - `k = 6`
 - `k = 7`
 - `k = 8`
 - `k = 9`
-- `k = 10`
+- `k = 10` -->
