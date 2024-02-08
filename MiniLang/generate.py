@@ -3,7 +3,7 @@ import pickle
 from enum import Enum, auto
 from dataclasses import dataclass, field, replace
 
-from errors import InvalidGenerationError
+from .errors import InvalidGenerationError
 
 INDENT = "  "
 

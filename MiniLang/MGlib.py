@@ -1,7 +1,7 @@
-from generate import Program, GenerationMethod
-from interpreter import Interpreter
-from parameters import Params
-from fitness_functions import get_fitness_function
+from .generate import Program, GenerationMethod
+from .interpreter import Interpreter
+from .parameters import Parameters
+from .fitness_functions import get_fitness_function
 from numpy import round
 import random
 import os
@@ -10,10 +10,6 @@ from copy import deepcopy
 
 
 class MGlib:
-    inputs: list
-    outputs: list
-    parameters: Params
-
     def __init__(self, inputs=None, outputs=None, parameters=None, example=None, method=GenerationMethod.FULL):
         self.inputs = inputs
         self.outputs = outputs
@@ -297,7 +293,7 @@ def serialize_deserialize():
 
 
 if __name__ == "__main__":
-    params = Params(
+    params = Parameters(
         max_depth=2,
         max_width=2,
         population_size=2,

@@ -152,3 +152,5 @@ cython_debug/
 #.idea/
 
 MiniLang/results/*/population
+MiniLang/results/bool/*/population
+MiniLang/antlr
